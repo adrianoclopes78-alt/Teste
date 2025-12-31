@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import FileUpload from './components/FileUpload';
 import Reader from './components/Reader';
 import { AppStatus, ProcessedText } from './types';
-import { processTextWithGemini } from './services/geminiService';
+import { processTextWithOpenAI } from './services/openaiService';
 
 const App: React.FC = () => {
   const [status, setStatus] = useState<AppStatus>(AppStatus.IDLE);
@@ -17,14 +17,14 @@ const App: React.FC = () => {
     setErrorMessage(null);
 
     try {
-      // Process the text through Gemini to get structured segments
+      // Process the text through OpenAI to get structured segments
       // We take the first 4000 characters to ensure we don't hit limits for a single prompt
       const textToProcess = text.substring(0, 4000);
-      const result = await processTextWithGemini(textToProcess, fileName);
+      const result = await processTextWithOpenAI(textToProcess, fileName);
       setProcessedData(result);
       setStatus(AppStatus.READING);
     } catch (error) {
-      console.error("Gemini Error:", error);
+      console.error("OpenAI Error:", error);
       setErrorMessage("Ocorreu um erro ao processar o texto com Inteligência Artificial. Verifique sua conexão ou tente um arquivo menor.");
       setStatus(AppStatus.ERROR);
     }
